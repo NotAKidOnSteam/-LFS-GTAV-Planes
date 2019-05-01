@@ -12,10 +12,10 @@ CreateClientConVar("nak_lazer_no_exhaust"					,  "0"  , NAK_SERVER_CONVAR)
 NAK = istable( NAK ) and NAK or {} -- lets check if the NAK (plz luna u took it first :O) table exists. if not, create it!
 NAK.GTAVLFS = {}
 
-NAK.GTAVLFS.VERSION = 1
+NAK.GTAVLFS.VERSION = 2
 
 function NAK.GTAVLFS.CheckUpdates()
-	http.Fetch("https://github.com/Blu-x92/LunasFlightSchool", function(contents,size) 
+	http.Fetch("https://github.com/NotAKidOnSteam/-LFS-GTAV-Planes", function(contents,size) 
 		local LatestVersion = tonumber( string.match( contents, "%s*(%d+)\n%s*</span>\n%s*commits" ) ) or 0  -- i took this from acf. I hope they don't mind
 		
 		if NAK.GTAVLFS.GetVersion() >= LatestVersion then
