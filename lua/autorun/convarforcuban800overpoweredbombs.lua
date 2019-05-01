@@ -12,8 +12,12 @@ CreateClientConVar("nak_lazer_no_exhaust"					,  "0"  , NAK_SERVER_CONVAR)
 NAK = istable( NAK ) and NAK or {} -- lets check if the NAK (plz luna u took it first :O) table exists. if not, create it!
 NAK.GTAVLFS = {}
 
-NAK.GTAVLFS.VERSION = 7
+NAK.GTAVLFS.VERSION = 9
 --STOP FUGING TOUCHING GITHUB YOU KEEP ADDING COMMITS WITH YOUR STUPID LITTLE FINGERS AND MAKING YOURSELF HAVE TO UPLOAD AGAIN SO THEY ARE SYNCED UGSJIGNSIGNSIJNGKSJ
+
+--WHAT THE FUCK STOP IT GITHUB JUST PLZ your killing me stop it i just pulled the readme.md to github desktop so i could push version 7 and it updates the commits by 2... STOP IT I CANT PREDICT THE FUTURE
+
+--i dont know what im doing so ill guess 9 and if it doesnt sync up then F in chat instead of github commits ill be commiting dead memes <O/ jk
 
 function NAK.GTAVLFS.CheckUpdates()
 	http.Fetch("https://github.com/NotAKidOnSteam/-LFS-GTAV-Planes", function(contents,size) 
