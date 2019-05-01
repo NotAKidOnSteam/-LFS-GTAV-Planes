@@ -12,7 +12,7 @@ CreateClientConVar("nak_lazer_no_exhaust"					,  "0"  , NAK_SERVER_CONVAR)
 NAK = istable( NAK ) and NAK or {} -- lets check if the NAK (plz luna u took it first :O) table exists. if not, create it!
 NAK.GTAVLFS = {}
 
-NAK.GTAVLFS.VERSION = 2
+NAK.GTAVLFS.VERSION = 4
 
 function NAK.GTAVLFS.CheckUpdates()
 	http.Fetch("https://github.com/NotAKidOnSteam/-LFS-GTAV-Planes", function(contents,size) 
