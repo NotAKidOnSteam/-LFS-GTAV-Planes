@@ -7,8 +7,8 @@ include("shared.lua")
 
 function ENT:ExhaustFX()
 
-	nak_lazer_no_exhaust = GetConVar( "nak_lazer_no_exhaust" )
-	if nak_lazer_no_exhaust:GetBool() == true then return end	
+	nak_no_exhaust = GetConVar( "nak_no_exhaust" )
+	if nak_no_exhaust:GetBool() == true then return end	
 
 	if not self:GetEngineActive() then return end
 
@@ -24,30 +24,6 @@ function ENT:ExhaustFX()
 
 	local Driver = self:GetDriver()
 
-	if IsValid( Driver ) then
-
-		local W = Driver:KeyPressed( IN_FORWARD )
-
-
-		if W ~= self.oldW then
-
-			self.oldW = W
-
-			if W then
-
-				self.BoostAdd = 120
-
-			end
-
-		end
-
-	end
-
-	
-
-	self.BoostAdd = self.BoostAdd and (self.BoostAdd - self.BoostAdd * FrameTime()) or 0
-
-	
 
 	if self.nextEFX then
 

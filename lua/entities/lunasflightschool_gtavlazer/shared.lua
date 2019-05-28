@@ -33,8 +33,8 @@ ENT.Mass = 2800
 ENT.Inertia = Vector(250000,250000,250000)
 ENT.Drag = 0.1
 
-ENT.SeatPos = Vector(160,0,100)
-ENT.SeatAng = Angle(0,-90,10)
+ENT.SeatPos = Vector(165,0,100)
+ENT.SeatAng = Angle(0,-90,25)
 
 ENT.WheelMass = 500
 ENT.WheelRadius = 10
@@ -43,16 +43,16 @@ ENT.WheelPos_R = Vector(-31,-50,47)
 ENT.WheelPos_C = Vector(120,0,44)
 
 
-ENT.IdleRPM = 250
-ENT.MaxRPM = 1500
-ENT.LimitRPM = 2000
+ENT.IdleRPM = 60
+ENT.MaxRPM = 1700
+ENT.LimitRPM = 2100
 
 ENT.RotorPos = Vector(184.247,0,66.909)
 ENT.WingPos = Vector(21.437,0,48.999)
 ENT.ElevatorPos = Vector(-200.309,0,91.064)
 ENT.RudderPos = Vector(-215.205,0,129.616)
 
-ENT.MaxVelocity = 2800
+ENT.MaxVelocity = 3100
 
 ENT.MaxThrust = 2500
 

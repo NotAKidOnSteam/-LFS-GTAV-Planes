@@ -20,23 +20,225 @@ end
 
 
 function ENT:RunOnSpawn()
+	self.timerreset = false 
 	nak_color_planes_when_spawned = GetConVar( "nak_color_planes_when_spawned" )
 	if nak_color_planes_when_spawned:GetBool() == true then
 		local colorSelect = { Color(127, 111, 63, 255), Color(255, 233, 127, 255), Color(127, 159, 255, 255), Color(95, 127, 63, 255), Color(255, 191, 0, 255)}
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
 	self:AddPassengerSeat( Vector(45,-11,61), Angle(0,-90,10) )
+	timer.Simple(1, function() if self:IsValid() then
+	if self:GetAI() then
+		self:SetAmmoSecondary(math.random( 0,4,1 ))
+	end
+	end end)
 end
 
 
 
 
 
+function ENT:OnTick()
+	local hp = self:GetHP()
+	local maxhp = self:GetMaxHP()
+	local rando = math.random(10,20,1)
+	if maxhp/2 > hp and self:IsValid() then
+	
+		if not self.timerreset == true and self:IsValid() then
+			self.timerreset = true
+			timer.Simple( math.random(10,20,1), function() if self:IsValid() then
+			
+				self:GetPhysicsObject():SetDragCoefficient( self.Drag + 0.05 ) 
+				self:StopEngine()
+				print("oof")
+				if self:GetAI() then
+					timer.Simple( math.random(2,6,1), function() if self:IsValid() then
+					self:StartEngine() 
+					print("on")
+					self.timerreset = false
+					end end)
+				else
+					self.timerreset = false
+					print("on not ai")
+				end
+			end end)
+			
+		end
+	end
+end
+
+
+function ENT:Explode()
+	if self.ExplodedAlready then return end
+
+	self.ExplodedAlready = true
+
+	local Driver = self:GetDriver()
+	local Gunner = self:GetGunner()
+	if IsValid( Driver ) then
+		Driver:TakeDamage( Driver:Health(), self.FinalAttacker or Entity(0), self.FinalInflictor or Entity(0) )
+	end
+
+	if IsValid( Gunner ) then
+		Gunner:TakeDamage( Gunner:Health(), self.FinalAttacker or Entity(0), self.FinalInflictor or Entity(0) )
+	end
+	
+	if istable( self.pSeats ) then
+		for _, pSeat in pairs( self.pSeats ) do
+
+			if IsValid( pSeat ) then
+				local psgr = pSeat:GetDriver()
+				if IsValid( psgr ) then
+					psgr:TakeDamage( psgr:Health(), self.FinalAttacker or Entity(0), self.FinalInflictor or Entity(0) )
+				end
+			end
+		end
+	end
+
+	local ent = ents.Create( "lunasflightschool_destruction" )
+	if IsValid( ent ) then
+		ent:SetPos( self:LocalToWorld( self:OBBCenter() ) )
+
+		ent.GibModels = self.GibModels
+
+		ent:Spawn()
+		ent:Activate()
+
+	end
+	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
+	local weaponselection = self:GetAmmoSecondary()
+	
+	if nak_overpowered:GetBool() == true then
+		if weaponselection == 0 then
+			local ent = ents.Create( "gb_bomb_1000gp" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+			
+		end
+		if weaponselection == 1 then
+			local ent = ents.Create( "gb_bomb_mk77" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+	
+		end
+		if weaponselection == 2 then
+
+			local ent = ents.Create( "gb_bomb_500gp" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+
+		end
+		if weaponselection == 3 then
+			local ent = ents.Create( "gb_bomb_cbu" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+			
+		end
+	else
+		if weaponselection == 0 then
+			local ent = ents.Create( "gb_bomb_250gp" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+		end
+		
+		if weaponselection == 1 then
+			local ent = ents.Create( "gb_bomb_fab250" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+		end
+		if weaponselection == 2 then
+
+			local ent = ents.Create( "gb_bomb_sc500" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+		end
+		if weaponselection == 3 then
+			local ent = ents.Create( "gb_bomb_cbu" )
+			local Pos = self:LocalToWorld( Vector(50,0,-30) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+		end
+	end
+
+	self:Remove()
+end
+
+function ENT:Destroy()
+	self.Destroyed = true
+	local PObj = self:GetPhysicsObject()
+	if IsValid( PObj ) then
+		PObj:SetDragCoefficient(self.Drag - 4)
+	end
+end
+
 
 
 
 function ENT:PrimaryAttack()
-	nak_cuban800_overpowered = GetConVar( "nak_cuban800_overpowered_bombs" )
+	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
 	if not self:CanPrimaryAttack() then return end
 	if not (file.Exists( "models/gredwitch/bombs/sc100.mdl", "GAME" )) then return end
 	
@@ -59,7 +261,7 @@ function ENT:PrimaryAttack()
 	local weaponselection = self:GetAmmoSecondary()
 	
 	
-	if nak_cuban800_overpowered:GetBool() == true then
+	if nak_overpowered:GetBool() == true then
 
 		if weaponselection == 0 then
 
@@ -380,12 +582,12 @@ function ENT:PrimaryAttack()
 end
 
 function ENT:CreateAI()
+
 	nak_color_planes_when_spawned = GetConVar( "nak_color_planes_when_spawned" )
 
-	local weaponSelect = { 0, 1, 2, 3, 4}
 	local colorSelect = { Color(127, 111, 63, 255), Color(255, 233, 127, 255), Color(127, 159, 255, 255), Color(95, 127, 63, 255), Color(255, 191, 0, 255)}
 
-	self:SetAmmoSecondary( weaponSelect[ math.random(  #weaponSelect - 1 ) ] )
+	self:SetAmmoSecondary(math.random( 0,4,1 ))
 	if nak_color_planes_when_spawned:GetBool() == false then
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
@@ -434,6 +636,29 @@ function ENT:HandleWeapons(Fire1, Fire2)
 		
 		self.OldFire = Fire1
 	end
+end
+
+
+function ENT:PrepExplode()
+
+	if self.MarkForDestruction then
+
+		self:Explode()
+
+	end
+
+	
+
+	if self:IsDestroyed() then
+
+		if self:GetVelocity():Length() < 100 then
+
+			self:Explode()
+
+		end
+
+	end
+
 end
 
 function ENT:OnEngineStarted()

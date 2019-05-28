@@ -4,15 +4,15 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 include("shared.lua")
 
-
 function ENT:SpawnFunction( ply, tr, ClassName )
 
 	if not tr.Hit then return end
 
 	local ent = ents.Create( ClassName )
-	ent:SetPos( tr.HitPos + tr.HitNormal * 120 + Vector(0,0,-120))
+	ent:SetPos( tr.HitPos + tr.HitNormal * 90 + Vector(0,0,-120))
 	ent:Spawn()
 	ent:Activate()
+	
 
 	return ent
 end
@@ -39,7 +39,7 @@ function ENT:SecondaryAttack()
 
 		if IsValid( Missile ) then
 
-			local ent = ents.Create( "lunasflightschool_gtavlazermissle" )
+			local ent = ents.Create( "lunasflightschool_missile" )
 			
 			local mPos = Missile:GetPos()
 
@@ -75,12 +75,19 @@ end
 
 function ENT:OnTick()
 	
-	self:SetBodygroup( 1, 1 )
-	self:SetBodygroup( 2, 1 )
-	self:SetBodygroup( 5, 1 )
-	self:SetBodygroup( 6, 1 )
-	self:SetBodygroup( 7, 1 )
-	self:SetBodygroup( 8, 1 )
+	
+	if self:GetBodygroup( 2 ) == 0 then
+		self:SetAmmoSecondary(0)
+		if self.twice == true then
+			self.twice = false
+		end
+	elseif self:GetBodygroup( 2 ) == 1 then
+		if self.twice == false then
+			self:SetAmmoSecondary(6)
+			self.twice = true
+		end
+	end
+	
 	nak_ai_infinite_missles = GetConVar( "nak_ai_infinite_missles" )
 	nak_infinite_missles = GetConVar( "nak_infinite_missles" )
 	if nak_infinite_missles:GetBool() == true or nak_ai_infinite_missles:GetBool() == true then
@@ -89,7 +96,7 @@ function ENT:OnTick()
 		
 			self:SetNWBool("NoMisslesLeft", false)
 			timer.Simple(5, function()
-				if self:IsValid() then
+				if self:IsValid() and self.twice == true and self:GetAmmoSecondary() <1 then
 				
 					self:SetAmmoSecondary(6)
 					self:EmitSound( "lfs/bf109/gear.wav" )
@@ -116,9 +123,9 @@ function ENT:PrimaryAttack()
 
 	local fP = {
 
-		Vector(117.441,-30.156,107.314),
+		Vector(29,-54,96),
 
-		Vector(117.441,30.156,107.314),
+		Vector(29,54,96),
 
 	}
 
@@ -170,6 +177,7 @@ end
 
 
 
+
 function ENT:RunOnSpawn()
 	nak_color_planes_when_spawned = GetConVar( "nak_color_planes_when_spawned" )
 	if nak_color_planes_when_spawned:GetBool() == true then
@@ -184,7 +192,7 @@ function ENT:RunOnSpawn()
 
 		for _,n in pairs( v ) do
 
-			local Missile = ents.Create( "prop_physics" )
+			local Missile = ents.Create( "prop_dynamic" )
 
 			Missile:SetModel( self.MISSILEMDL )
 
@@ -197,7 +205,6 @@ function ENT:RunOnSpawn()
 			Missile:Spawn()
 
 			Missile:Activate()
-			Missile:SetColor(self:GetColor())
 
 			Missile:SetNotSolid( true )
 
@@ -211,6 +218,7 @@ function ENT:RunOnSpawn()
 			table.insert( self.MissileEnts, Missile )
 		end
 	end
+	self.twice = false
 end
 
 
@@ -229,127 +237,63 @@ function ENT:RemoveAI()
 end
 
 
-
-
 function ENT:HandleWeapons(Fire1, Fire2)
 
 	local Driver = self:GetDriver()
 
-	
-
 	if IsValid( Driver ) then
-
 		if self:GetAmmoPrimary() > 0 then
-
 			Fire1 = Driver:KeyDown( IN_ATTACK )
-
 		end
-
-		
-
 		if self:GetAmmoSecondary() > 0 then
-
 			Fire2 = Driver:KeyDown( IN_ATTACK2 )
-
 		end
-
 	end
-
-	
-
 	if Fire1 then
-
 		self:PrimaryAttack()
-
 	end
-
 	
-
 	if istable( self.MissileEnts ) then
-
 		for k, v in pairs( self.MissileEnts ) do
-
 			if IsValid( v ) then
-
 				if k > self:GetAmmoSecondary() then
-
 					v:SetNoDraw( true )
-
 				else
-
 					v:SetNoDraw( false )
-
 				end
-
 			end
-
 		end
-
 	end
-
-	
 
 	if self.OldFire2 ~= Fire2 then
-
 		if Fire2 then
-
 			self:SecondaryAttack()
-
 		end
-
 		self.OldFire2 = Fire2
-
 	end
-
-	
-
 	if self.OldFire ~= Fire1 then
-
-		
-
 		if Fire1 then
-
 			self.wpn1 = CreateSound( self, "SPITFIRE_FIRE_LOOP" )
-
 			self.wpn1:Play()
-
 			self:CallOnRemove( "stopmesounds12", function( ent )
-
 				if ent.wpn1 then
-
 					ent.wpn1:Stop()
-
 				end
-
 			end)
-
 		else
-
 			if self.OldFire == true then
-
 				if self.wpn1 then
-
 					self.wpn1:Stop()
-
 				end
-
 				self.wpn1 = nil
-
-					
-
 				self:EmitSound( "SPITFIRE_FIRE_LASTSHOT" )
-
 			end
-
 		end
-
-		
-
 		self.OldFire = Fire1
-
 	end
-
 end
+
+
 function ENT:OnEngineStarted()
 	self:EmitSound( "JET_START.ogg" )
 end
@@ -359,8 +303,30 @@ function ENT:OnEngineStopped()
 end
 
 
+function ENT:HandleLandingGear()
+	--loool nub r you looking for why this plane doesnt have retractable landing gear? WEHLP BLAME ROCKSTAR BECAUSE IT IS NOT IN GTAV.
+	--idk i could have added it but less rigging work in blender = less boring more time to be in gmod and code :P
+	--This function has to be empty so the wheels dont change when space is pressed
+end
 
 
-function ENT:OnLandingGearToggled( bOn )
-	self:EmitSound( "lfs/bf109/gear.wav" )
+function ENT:DropBombs()
+	print("boom")
+end
+
+
+
+
+
+
+
+function ENT:OnReloadWeapon()
+	self:SetAmmoPrimary( self:GetMaxAmmoPrimary() )
+	self:SetAmmoSecondary( self:GetMaxAmmoSecondary() )
+	self:SetBombsAmmo( self:GetMaxBombsAmmo() ) -- ADDED THIS TO DEFAULT RELOAD FUNCTION SO IT ALSO RELOADS BOMBS
+end
+--NetworkVar doesnt make "take" a thing so we make it manually. SET AND GET IN "SetBombsAmmo" and "GetBombsAmmo" is created when using !self:NetworkVar! (look lines 190-191 in shared.lua) that is the part that makes the C menu properties. Configure the order, name, min, and max there!
+function ENT:TakeBombsAmmo( amount )
+	amount = amount or 1
+	self:SetBombsAmmo( math.max(self:GetBombsAmmo() - amount,0) )
 end
