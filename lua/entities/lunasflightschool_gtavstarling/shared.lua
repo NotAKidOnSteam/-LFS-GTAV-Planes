@@ -16,15 +16,11 @@ ENT.MDL = "models/notakid/gtav/planes/ls-22_starling/starling_main.mdl"
 
 
 ENT.GibModels = {
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_1.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_2.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_3.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_4.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_5.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_6.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_7.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_break_extra_8.mdl",
-	"models/notakid/gtav/planes/lazer/gibs/lazer_main_broken.mdl",
+	"models/notakid/gtav/planes/ls-22_starling/gibs/starling_main_broken.mdl",
+	"models/notakid/gtav/planes/ls-22_starling/gibs/starling_prop_broken.mdl",
+	"models/notakid/gtav/planes/ls-22_starling/gibs/starling_wingl_broken.mdl",
+	"models/notakid/gtav/planes/ls-22_starling/gibs/starling_wingr_broken.mdl",
+
 }
 
 ENT.AITEAM = 1
@@ -139,6 +135,22 @@ sound.Add( {
 	sound = "^LAZER_DISTANT_LOOP.wav"
 } )
 
+sound.Add( {
+	name = "GTAV_BOOST_START",
+	channel = CHAN_STATIC,
+	volume = 1.0,
+	level = 125,
+	sound = "^PLANE_BOOST_START.wav"
+} )
+
+sound.Add( {
+	name = "GTAV_BOOST_END",
+	channel = CHAN_STATIC,
+	volume = 1.0,
+	level = 125,
+	sound = "^PLANE_BOOST_END.wav"
+} )
+
 function ENT:SetupDataTables()
 
 	self:NetworkVar( "Entity",0, "Driver" )
@@ -189,8 +201,13 @@ function ENT:SetupDataTables()
 	self:NetworkVar( "Int",1, "AmmoSecondary", { KeyName = "secondaryammo", Edit = { type = "Int", order = 4,min = 0, max = self.MaxSecondaryAmmo, category = "Weapons"} } )
 	
 	--100% not taken from LFSPlanes base :P BombsAmmo is the name! THE GAME AUTO MAKES Get(networkvar name) and Set(networkvar name)!!!!! dont make these yourself like me and get pissed that it doesnt work!
-	self:NetworkVar( "Int",3, "BombType", { KeyName = "bombtype", Edit = { type = "Int", order = 5,min = 0, max = 4, category = "Weapons"} } )
+	self:NetworkVar( "Int",3, "BombsType", { KeyName = "bombstype", Edit = { type = "Int", order = 5,min = 0, max = 4, category = "Weapons"} } )
 	self:NetworkVar( "Int",4, "BombsAmmo", { KeyName = "ammobombs", Edit = { type = "Int", order = 6,min = 0, max = self.MaxBombsAmmo, category = "Weapons"} } )
+	self:NetworkVar( "Float",10, "BayOpen" ) 
+	self:NetworkVar( "Float",12, "BombsTime" ) 
+	self:NetworkVar( "Bool",13, "Boosting" ) 
+	self:NetworkVar( "Float",14, "Boost" ) 
+	self:NetworkVar( "Bool",15, "LockBoost" ) 
 	if SERVER then
 		self:NetworkVarNotify( "AI", self.OnToggleAI )
 		self:SetAITEAM( self.AITEAM )

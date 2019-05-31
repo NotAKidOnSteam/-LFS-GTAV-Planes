@@ -3,6 +3,30 @@
 include("shared.lua")
 
 
+function ENT:Think()
+
+	self:AnimCabin()
+
+	self:AnimLandingGear()
+	self:AnimBombsDoor()
+
+	self:AnimRotor()
+
+	self:AnimFins()
+
+	
+
+	self:CheckEngineState()
+
+	
+
+	self:ExhaustFX()
+
+	self:DamageFX()
+
+end
+
+
 function ENT:ExhaustFX()
 	
 
@@ -15,20 +39,20 @@ function ENT:ExhaustFX()
 
 	self.nextEFX = self.nextEFX or 0
 
-	if self:GetNWBool("StarlingBoost") == true then
-		self.IsBoosting = 1
+	if self:GetBoosting() then
+		self.IsBoosting = 1 
 	else
-		self.IsBoosting = 2
+		self.IsBoosting = 4
 	end
 	
 
-	local THR = (self:GetRPM() / (self.LimitRPM - self.IdleRPM) / self.IsBoosting)
+	local THR = (self:GetRPM() / (self.LimitRPM - self.IdleRPM) * 4 / self.IsBoosting)
 
 
 
 	if self.nextEFX then
 
-		self.nextEFX = CurTime() + 0.2
+		self.nextEFX = CurTime() + 0.08
 
 		
 
@@ -176,6 +200,10 @@ function ENT:SoundStop()
 	if self.RPM4 then
 		self.RPM4:Stop()
 	end
+	if self.AIRNOISE then
+		self.AIRNOISE:Stop()
+	end
+	
 	
 	if self.DIST then
 		self.DIST:Stop()
@@ -233,19 +261,12 @@ function ENT:AnimCabin()
 	self:ManipulateBoneAngles( 7, Angle( 0,0,self.SMcOpen * 103 ) )
 end
 
-
-function ENT:AnimLandingGear()
-
-end
-
-
-
 local mat = Material( "sprites/glow_wing_light" )
 function ENT:Draw()
 	self:DrawModel()
 	
 
-	if self:GetEngineActive() then
+	if self:GetBayOpen()  < 0.1 then
 		for i = 0,1 do
 			
 			local pos = self:LocalToWorld( Vector(45,2.608,108.52) )
@@ -265,7 +286,7 @@ function ENT:Draw()
 	
 	local Driver = self:GetDriver()
 	--if shooting
-	if IsValid( Driver ) and Driver:KeyDown( IN_ATTACK ) then
+	if IsValid( Driver ) and self:GetBombsTime() < CurTime() then
 		for i = 0,1 do
 			
 			local pos = self:LocalToWorld( Vector(51.7,2.01,111.06) )
@@ -284,3 +305,8 @@ function ENT:Draw()
 	end
 end
 
+function ENT:AnimBombsDoor()
+	self.SMRG = self.SMRG and self.SMRG + (50 *  (1 - self:GetBayOpen()) - self.SMRG) * FrameTime() * 2 or 0
+	self:ManipulateBoneAngles( 4, Angle( self.SMRG ) )
+	self:ManipulateBoneAngles( 3, Angle( -self.SMRG ) )
+end

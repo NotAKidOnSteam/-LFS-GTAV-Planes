@@ -13,134 +13,147 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	ent:SetPos( tr.HitPos + tr.HitNormal * 120 + Vector(0,0,-90) )
 	ent:Spawn()
 	ent:Activate()
-	
-	ent.floaty = ents.Create("prop_physics")
-	ent.floaty:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty:SetPos(ent:GetPos() + ent:GetForward() * -120 + ent:GetRight() * 60 + ent:GetUp() * 40   )
-	ent.floaty:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty:Spawn()
-	ent.floaty:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty, 0, 0, 0, true )
-	ent.floaty:Activate()
-	ent.floaty:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty2 = ents.Create("prop_physics")
-	ent.floaty2:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty2:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty2:SetPos(ent:GetPos() + ent:GetForward() * -120 + ent:GetRight() * -60 + ent:GetUp() * 40   )
-	ent.floaty2:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty2:Spawn()
-	ent.floaty2:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty2, 0, 0, 0, true )
-	ent.floaty2:Activate()
-	ent.floaty2:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty2:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty3 = ents.Create("prop_physics")
-	ent.floaty3:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty3:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty3:SetPos(ent:GetPos() + ent:GetForward() * -60 + ent:GetRight() * 60 + ent:GetUp() * 40   )
-	ent.floaty3:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty3:Spawn()
-	ent.floaty3:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty3, 0, 0, 0, true )
-	ent.floaty3:Activate()
-	ent.floaty3:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty3:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty4 = ents.Create("prop_physics")
-	ent.floaty4:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty4:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty4:SetPos(ent:GetPos() + ent:GetForward() * -60 + ent:GetRight() * -60 + ent:GetUp() * 40   )
-	ent.floaty4:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty4:Spawn()
-	ent.floaty4:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty4, 0, 0, 0, true )
-	ent.floaty4:Activate()
-	ent.floaty4:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty4:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty5 = ents.Create("prop_physics")
-	ent.floaty5:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty5:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty5:SetPos(ent:GetPos() + ent:GetForward() * -0 + ent:GetRight() * 60 + ent:GetUp() * 40   )
-	ent.floaty5:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty5:Spawn()
-	ent.floaty5:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty5, 0, 0, 0, true )
-	ent.floaty5:Activate()
-	ent.floaty5:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty5:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty6 = ents.Create("prop_physics")
-	ent.floaty6:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty6:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty6:SetPos(ent:GetPos() + ent:GetForward() * -0 + ent:GetRight() * -60 + ent:GetUp() * 40   )
-	ent.floaty6:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty6:Spawn()
-	ent.floaty6:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty6, 0, 0, 0, true )
-	ent.floaty6:Activate()
-	ent.floaty6:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty6:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty7 = ents.Create("prop_physics")
-	ent.floaty7:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty7:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty7:SetPos(ent:GetPos() + ent:GetForward() * 60 + ent:GetRight() * 60 + ent:GetUp() * 40   )
-	ent.floaty7:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty7:Spawn()
-	ent.floaty7:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty7, 0, 0, 0, true )
-	ent.floaty7:Activate()
-	ent.floaty7:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty7:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	ent.floaty8 = ents.Create("prop_physics")
-	ent.floaty8:SetCollisionGroup(COLLISION_GROUP_NONE)	
-	ent.floaty8:SetModel("models/props_c17/oildrum001.mdl")
-	ent.floaty8:SetPos(ent:GetPos() + ent:GetForward() * 60 + ent:GetRight() * -60 + ent:GetUp() * 40  )
-	ent.floaty8:SetAngles(Angle(90,ent:GetAngles(),ent:GetAngles()))
-	ent.floaty8:Spawn()
-	ent.floaty8:GetPhysicsObject():SetMass(10)
-	constraint.Weld( ent, ent.floaty8, 0, 0, 0, true )
-	ent.floaty8:Activate()
-	ent.floaty8:GetPhysicsObject():SetDragCoefficient(-9000000)
-	ent.floaty8:GetPhysicsObject():SetBuoyancyRatio( 10 )
-	
-	constraint.NoCollide( ent.floaty8, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty7, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty6, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty5, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty4, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty3, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty2, ent, 0, 0, true )
-	constraint.NoCollide( ent.floaty, ent, 0, 0, true )
-	
-	
-	ent.floaty:SetColor( 255, 255, 255, 0 )
-	ent.floaty:SetNoDraw( true)
-	ent.floaty2:SetColor( 255, 255, 255, 0 )
-	ent.floaty2:SetNoDraw( true)
-	ent.floaty3:SetColor( 255, 255, 255, 0 )
-	ent.floaty3:SetNoDraw( true)
-	ent.floaty4:SetColor( 255, 255, 255, 0 )
-	ent.floaty4:SetNoDraw( true)
-	ent.floaty5:SetColor( 255, 255, 255, 0 )
-	ent.floaty5:SetNoDraw( true)
-	ent.floaty6:SetColor( 255, 255, 255, 0 )
-	ent.floaty6:SetNoDraw( true)
-	ent.floaty7:SetColor( 255, 255, 255, 0 )
-	ent.floaty7:SetNoDraw( true)
-	ent.floaty8:SetColor( 255, 255, 255, 0 )
-	ent.floaty8:SetNoDraw( true)
-	--]]
+
 	return ent
 end
 
 function ENT:OnTick(ent)
+
+	if self.SpawnedFloats == false then
+		self.SpawnedFloats = true
+
+		self.floaty = ents.Create("prop_physics")
+		self.floaty:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty:SetPos(self:GetPos() + self:GetForward() * -120 + self:GetRight() * 60 + self:GetUp() * 40   )
+		self.floaty:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty:Spawn()
+		self.floaty:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty, 0, 0, 0, true )
+		self.floaty:Activate()
+		self.floaty:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty2 = ents.Create("prop_physics")
+		self.floaty2:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty2:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty2:SetPos(self:GetPos() + self:GetForward() * -120 + self:GetRight() * -60 + self:GetUp() * 40   )
+		self.floaty2:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty2:Spawn()
+		self.floaty2:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty2, 0, 0, 0, true )
+		self.floaty2:Activate()
+		self.floaty2:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty2:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty3 = ents.Create("prop_physics")
+		self.floaty3:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty3:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty3:SetPos(self:GetPos() + self:GetForward() * -60 + self:GetRight() * 60 + self:GetUp() * 40   )
+		self.floaty3:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty3:Spawn()
+		self.floaty3:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty3, 0, 0, 0, true )
+		self.floaty3:Activate()
+		self.floaty3:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty3:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty4 = ents.Create("prop_physics")
+		self.floaty4:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty4:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty4:SetPos(self:GetPos() + self:GetForward() * -60 + self:GetRight() * -60 + self:GetUp() * 40   )
+		self.floaty4:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty4:Spawn()
+		self.floaty4:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty4, 0, 0, 0, true )
+		self.floaty4:Activate()
+		self.floaty4:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty4:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty5 = ents.Create("prop_physics")
+		self.floaty5:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty5:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty5:SetPos(self:GetPos() + self:GetForward() * -0 + self:GetRight() * 60 + self:GetUp() * 40   )
+		self.floaty5:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty5:Spawn()
+		self.floaty5:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty5, 0, 0, 0, true )
+		self.floaty5:Activate()
+		self.floaty5:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty5:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty6 = ents.Create("prop_physics")
+		self.floaty6:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty6:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty6:SetPos(self:GetPos() + self:GetForward() * -0 + self:GetRight() * -60 + self:GetUp() * 40   )
+		self.floaty6:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty6:Spawn()
+		self.floaty6:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty6, 0, 0, 0, true )
+		self.floaty6:Activate()
+		self.floaty6:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty6:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty7 = ents.Create("prop_physics")
+		self.floaty7:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty7:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty7:SetPos(self:GetPos() + self:GetForward() * 60 + self:GetRight() * 60 + self:GetUp() * 40   )
+		self.floaty7:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty7:Spawn()
+		self.floaty7:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty7, 0, 0, 0, true )
+		self.floaty7:Activate()
+		self.floaty7:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty7:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		self.floaty8 = ents.Create("prop_physics")
+		self.floaty8:SetCollisionGroup(COLLISION_GROUP_NONE)	
+		self.floaty8:SetModel("models/props_c17/oildrum001.mdl")
+		self.floaty8:SetPos(self:GetPos() + self:GetForward() * 60 + self:GetRight() * -60 + self:GetUp() * 40  )
+		self.floaty8:SetAngles(Angle(90,self:GetAngles(),self:GetAngles()))
+		self.floaty8:Spawn()
+		self.floaty8:GetPhysicsObject():SetMass(10)
+		constraint.Weld( self, self.floaty8, 0, 0, 0, true )
+		self.floaty8:Activate()
+		self.floaty8:GetPhysicsObject():SetDragCoefficient(-9000000)
+		self.floaty8:GetPhysicsObject():SetBuoyancyRatio( 10 )
+		
+		constraint.NoCollide( self.floaty8, self, 0, 0, true )
+		constraint.NoCollide( self.floaty7, self, 0, 0, true )
+		constraint.NoCollide( self.floaty6, self, 0, 0, true )
+		constraint.NoCollide( self.floaty5, self, 0, 0, true )
+		constraint.NoCollide( self.floaty4, self, 0, 0, true )
+		constraint.NoCollide( self.floaty3, self, 0, 0, true )
+		constraint.NoCollide( self.floaty2, self, 0, 0, true )
+		constraint.NoCollide( self.floaty, self, 0, 0, true )
+		
+		
+		self.floaty:SetColor( 255, 255, 255, 0 )
+		self.floaty:SetNoDraw( true )
+		self.floaty:DrawShadow( false )
+		self.floaty2:SetColor( 255, 255, 255, 0 )
+		self.floaty2:SetNoDraw( true )
+		self.floaty2:DrawShadow( false )
+		self.floaty3:SetColor( 255, 255, 255, 0 )
+		self.floaty3:SetNoDraw( true )
+		self.floaty3:DrawShadow( false )
+		self.floaty4:SetColor( 255, 255, 255, 0 )
+		self.floaty4:SetNoDraw( true )
+		self.floaty4:DrawShadow( false )
+		self.floaty5:SetColor( 255, 255, 255, 0 )
+		self.floaty5:SetNoDraw( true )
+		self.floaty5:DrawShadow( false )
+		self.floaty6:SetColor( 255, 255, 255, 0 )
+		self.floaty6:SetNoDraw( true )
+		self.floaty6:DrawShadow( false )
+		self.floaty7:SetColor( 255, 255, 255, 0 )
+		self.floaty7:SetNoDraw( true )
+		self.floaty7:DrawShadow( false )
+		self.floaty8:SetColor( 255, 255, 255, 0 )
+		self.floaty8:SetNoDraw( true )
+		self.floaty8:DrawShadow( false )
+	end
+
 	self:CallOnRemove( "removebarrelssonolagbuildupfromvodo", function( ent )
 		if self.floaty8:IsValid() then self.floaty8:Remove() end 
 		if self.floaty7:IsValid() then self.floaty7:Remove() end 
@@ -151,7 +164,6 @@ function ENT:OnTick(ent)
 		if self.floaty2:IsValid() then self.floaty2:Remove() end 
 		if self.floaty:IsValid() then self.floaty:Remove() end 
 	end )
-	
 	local vel = self:GetVelocity():Length()
 	local speed = math.Round(vel * 0.09144,0)
 	
@@ -229,6 +241,8 @@ function ENT:RunOnSpawn()
 	self:AddPassengerSeat( Vector(0,-11.5,70), Angle(0,-90,12) )
 	self:AddPassengerSeat( Vector(-36,39,49), Angle(0,-0,4) )
 	self:AddPassengerSeat( Vector(-36,-39,49), Angle(0,-180,4) )
+	self.SpawnedFloats = false
+
 end
 
 function ENT:PrimaryAttack()
@@ -293,7 +307,7 @@ function ENT:InitWheels()
 
 				
 
-				wheel_L:SetNoDraw( true)
+				wheel_L:SetNoDraw( true )
 
 				wheel_L:DrawShadow( false )
 
@@ -389,7 +403,7 @@ function ENT:InitWheels()
 
 				
 
-				wheel_R:SetNoDraw( true)
+				wheel_R:SetNoDraw( true )
 
 				wheel_R:DrawShadow( false )
 
@@ -462,93 +476,135 @@ function ENT:InitWheels()
 
 		if isvector( self.WheelPos_E ) then
 
-			local wheel_E = ents.Create( "prop_physics" )
+			local SteerMaster2 = ents.Create( "prop_physics" )
 
-		
+			
 
-			if IsValid( wheel_E ) then
+			if IsValid( SteerMaster2 ) then
 
-				wheel_E:SetPos( self:LocalToWorld( self.WheelPos_E ) )
+				SteerMaster2:SetModel( "models/hunter/plates/plate025x025.mdl" )
 
-				wheel_E:SetAngles( self:LocalToWorldAngles( Angle(0,90,0) ) )
+				SteerMaster2:SetPos( self:GetPos() )
 
-				
+				SteerMaster2:SetAngles( Angle(0,90,0) )
 
-				wheel_E:SetModel( "models/props_vehicles/tire001c_car.mdl" )
+				SteerMaster2:Spawn()
 
-				wheel_E:Spawn()
-
-				wheel_E:Activate()
+				SteerMaster2:Activate()
 
 				
 
-				wheel_E:SetNoDraw( true)
+				local sm2PObj = SteerMaster2:GetPhysicsObject()
 
-				wheel_E:DrawShadow( false )
+				if IsValid( sm2PObj ) then
 
-				wheel_E.DoNotDuplicate = true
-
-				
-
-				local radius = self.WheelRadius
-
-				
-
-				wheel_E:PhysicsInitSphere( radius, "jeeptire" )
-
-				wheel_E:SetCollisionBounds( Vector(-radius,-radius,-radius), Vector(radius,radius,radius) )
-
-				
-
-				local LWpObj = wheel_E:GetPhysicsObject()
-
-				if not IsValid( LWpObj ) then
-
-					self:Remove()
-
-					
-
-					print("LFS: Failed to initialize landing gear phys model. Plane terminated.")
-
-					return
+					sm2PObj:EnableMotion( false )
 
 				end
 
-			
+				
 
-				LWpObj:EnableMotion(false)
+				SteerMaster2:SetOwner( self )
 
-				LWpObj:SetMass( self.WheelMass )
+				SteerMaster2:DrawShadow( false )
+
+				SteerMaster2:SetNotSolid( true )
+
+				SteerMaster2:SetNoDraw( true )
+
+				SteerMaster2.DoNotDuplicate = true
+
+				self:DeleteOnRemove( SteerMaster2 )
+
+				self:dOwner( SteerMaster2 )
 
 				
 
-				self.wheel_E = wheel_E
-
-				self:DeleteOnRemove( wheel_E )
-
-				self:dOwner( wheel_E )
+				self.wheel_E_master = SteerMaster2
 
 				
 
-				self:dOwner( constraint.Axis( wheel_E, self, 0, 0, LWpObj:GetMassCenter(), wheel_E:GetPos(), 0, 0, 50, 0, Vector(1,0,0) , false ) )
-
-				self:dOwner( constraint.NoCollide( wheel_E, self, 0, 0 ) )
+				local wheel_E = ents.Create( "prop_physics" )
 
 				
 
-				LWpObj:EnableMotion( true )
+				if IsValid( wheel_E ) then
 
-				LWpObj:EnableDrag( false ) 
+					wheel_E:SetPos( self:LocalToWorld( self.WheelPos_E ) )
+
+					wheel_E:SetAngles( Angle(0,0,0) )
+
+					
+
+					wheel_E:SetModel( "models/props_vehicles/tire001c_car.mdl" )
+
+					wheel_E:Spawn()
+
+					wheel_E:Activate()
+
+					
+
+					wheel_E:SetNoDraw( true )
+
+					wheel_E:DrawShadow( false )
+
+					wheel_E.DoNotDuplicate = true
+
+					
+
+					local radius = self.WheelRadius
+
+					
+
+					wheel_E:PhysicsInitSphere( radius, "jeeptire" )
+
+					wheel_E:SetCollisionBounds( Vector(-radius,-radius,-radius), Vector(radius,radius,radius) )
+
+					
+
+					local EWpObj = wheel_E:GetPhysicsObject()
+
+					if not IsValid( EWpObj ) then
+
+						self:Remove()
+
+						
+
+						print("LFS: Failed to initialize landing gear phys model. Plane terminated.")
+
+						return
+
+					end
 
 				
 
-			else
+					EWpObj:EnableMotion(false)
 
-				self:Remove()
+					EWpObj:SetMass( self.WheelMass )
 
-			
+					
 
-				print("LFS: Failed to initialize landing gear. Plane terminated.")
+					self.wheel_E = wheel_E
+
+					self:DeleteOnRemove( wheel_E )
+
+					self:dOwner( wheel_E )
+
+					
+
+					self:dOwner( constraint.AdvBallsocket(wheel_E, SteerMaster2,0,0,Vector(0,0,0),Vector(0,0,0),0,0, -180, -0.01, -0.01, 180, 0.01, 0.01, 0, 0, 0, 1, 0) )
+
+					self:dOwner( constraint.AdvBallsocket(wheel_E,self,0,0,Vector(0,0,0),Vector(0,0,0),0,0, -180, -180, -180, 180, 180, 180, 0, 0, 0, 0, 0) )
+
+					self:dOwner( constraint.NoCollide( wheel_E, self, 0, 0 ) )
+
+					
+
+					EWpObj:EnableMotion( true )
+
+					EWpObj:EnableDrag( false ) 
+
+				end
 
 			end
 
@@ -591,7 +647,7 @@ function ENT:InitWheels()
 
 				SteerMaster:SetNotSolid( true )
 
-				SteerMaster:SetNoDraw( true)
+				SteerMaster:SetNoDraw( true )
 
 				SteerMaster.DoNotDuplicate = true
 
@@ -625,7 +681,7 @@ function ENT:InitWheels()
 
 					
 
-					wheel_C:SetNoDraw( true)
+					wheel_C:SetNoDraw( true )
 
 					wheel_C:DrawShadow( false )
 
@@ -711,3 +767,133 @@ function ENT:InitWheels()
 
 end
 
+
+function ENT:HandleLandingGear()
+
+	local Driver = self:GetDriver()
+
+	
+
+	if IsValid( Driver ) then
+
+		local KeyJump = Driver:lfsGetInput( "VSPEC" )
+
+		
+
+		if self.OldKeyJump ~= KeyJump then
+
+			self.OldKeyJump = KeyJump
+
+			if KeyJump then
+
+				self:ToggleLandingGear()
+
+				self:PhysWake()
+
+			end
+
+		end
+
+	end
+
+	
+
+	local TValAuto = (self:GetStability() > 0.3) and 0 or 1
+
+	local TValManual = self.LandingGearUp and 0 or 1
+
+	
+
+	local TVal = self.WheelAutoRetract and TValAuto or TValManual
+
+	local Speed = FrameTime()
+
+	local Speed2 = Speed * math.abs( math.cos( math.rad( self:GetLGear() * 180 ) ) )
+
+	
+
+	self:SetLGear( self:GetLGear() + math.Clamp(TVal - self:GetLGear(),-Speed,Speed) )
+
+	self:SetRGear( self:GetRGear() + math.Clamp(TVal - self:GetRGear(),-Speed2,Speed2) )
+
+	
+
+	if IsValid( self.wheel_R ) then
+
+		local RWpObj = self.wheel_R:GetPhysicsObject()
+
+		if IsValid( RWpObj ) then
+
+			RWpObj:SetMass( 1 + (self.WheelMass - 1) * self:GetRGear() ^ 5 )
+
+		end
+
+	end
+
+	
+
+	if IsValid( self.wheel_L ) then
+
+		local LWpObj = self.wheel_L:GetPhysicsObject()
+
+		if IsValid( LWpObj ) then
+
+			LWpObj:SetMass( 1 + (self.WheelMass - 1) * self:GetLGear() ^ 5 )
+
+		end
+
+	end
+
+	
+
+	if IsValid( self.wheel_C ) then
+
+		local CWpObj = self.wheel_C:GetPhysicsObject()
+
+		if IsValid( CWpObj ) then
+
+			CWpObj:SetMass( 1 + (self.WheelMass - 1) * self:GetRGear() )
+
+		end
+
+	end
+
+	if IsValid( self.wheel_E ) then
+
+		local CWpObj = self.wheel_E:GetPhysicsObject()
+
+		if IsValid( CWpObj ) then
+
+			CWpObj:SetMass( 1 + (self.WheelMass - 1) * self:GetRGear() )
+
+		end
+
+	end
+
+end
+
+
+function ENT:SteerWheel( SteerAngle )
+	if IsValid( self.wheel_C_master ) and IsValid( self.wheel_E_master ) then
+		if isvector( self.WheelPos_L ) and isvector( self.WheelPos_R ) and isvector( self.WheelPos_C ) and isvector( self.WheelPos_E ) then
+			local SteerMaster = self.wheel_C_master
+			local SteerMaster2 = self.wheel_E_master
+			local smPObj = SteerMaster:GetPhysicsObject()
+			local sm2PObj = SteerMaster2:GetPhysicsObject()
+			if IsValid( smPObj ) then
+				if smPObj:IsMotionEnabled() then
+					smPObj:EnableMotion( false )
+				end
+			end
+			if IsValid( sm2PObj ) then
+				if sm2PObj:IsMotionEnabled() then
+					sm2PObj:EnableMotion( false )
+				end
+			end
+			local Mirror = ((self.WheelPos_L.x + self.WheelPos_R.x) * 0.5 > self.WheelPos_C.x) and -1 or 1
+			local Mirror2 = ((self.WheelPos_L.x + self.WheelPos_R.x) * 0.5 > self.WheelPos_E.x) and -1 or 1
+			self.wheel_C_master:SetAngles( self:LocalToWorldAngles( Angle(0,math.Clamp(SteerAngle * Mirror,-45,45),0) ) )
+			self.wheel_E_master:SetAngles( self:LocalToWorldAngles( Angle(0,math.Clamp(SteerAngle * Mirror2,-45,45),0) ) )
+		end
+	end
+end

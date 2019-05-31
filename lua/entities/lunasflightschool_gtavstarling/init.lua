@@ -74,10 +74,40 @@ function ENT:SecondaryAttack()
 end
 
 function ENT:OnTick()
-	
-	
+	local tr = util.TraceLine({
+	start = self:LocalToWorld( Vector(0,0,200) ),
+	endpos = self:LocalToWorld( Vector(0,0,-34000) ),
+	filter = self,
+	})
+	local groundpos = tr.HitPos
+	local groundpos = self:GetPhysicsObject():GetPos():Distance( tr.HitPos )
+	if groundpos<1000 then
+		self.NearGround = true
+	elseif groundpos>1000 then
+		self.NearGround = false
+	end
+
+	-- check if plane has player inside, is not ai, then if my custom key is pressed defined in line 106 of nak_gtav_planes.lua (defining it with the lfskeyadd thing makes the key changable in the lfs control C menu)
+	if self:GetActive() and not self:GetAI() then
+		local IsMyKeyPressed = self:GetDriver():lfsGetInput( "BOMB_DROP" )
+
+		if IsMyKeyPressed == true then
+			self.KeyPressed  = self.KeyPressed + 1
+		elseif IsMyKeyPressed == false then
+			if self.KeyPressed > 11 and self:GetBayOpen() ~= 1 and self.NearGround == false then
+				--drop bomb
+				self:DropBombs()
+			elseif self.KeyPressed > 2 and self.KeyPressed < 10 then 
+				--open bay door
+				self:OpenHatch()	
+			end
+			self.KeyPressed = 0 
+		end
+	end
+
+	-- this code below is checking if the bodygroup for the missles are set, and if so give it ammo once
 	if self:GetBodygroup( 2 ) == 0 then
-		self:SetAmmoSecondary(0)
+		self:SetAmmoSecondary(-1)
 		if self.twice == true then
 			self.twice = false
 		end
@@ -106,6 +136,87 @@ function ENT:OnTick()
 			self:SetNWBool("NoMisslesLeft", true)
 		end
 	end
+	
+	local Driver = self:GetDriver()
+	if IsValid( Driver ) and self:GetBodygroup( 3 ) == 1 and not self:GetAI() then
+		local KeyJump = Driver:lfsGetInput( "VSPEC" )
+		if self.OldKeyJump ~= KeyJump then
+			self.OldKeyJump = KeyJump
+			if KeyJump and self:GetEngineActive() and self:GetBoosting() == false and self:GetLockBoost() == false then
+				self:SetBoosting(true)
+				self.BoostEnd = false
+				self.BoostStart = true
+			elseif self:GetLockBoost() == true then
+				self:SetBoosting(false)
+				self.BoostStart = false
+				self.BoostEnd = true
+			else 
+				self.BoostEnd = true
+				self.BoostStart = false
+				self:SetBoosting(false)
+			end
+		end
+	elseif self:GetAI() and self:GetBodygroup(3) == 1 then
+	
+		local KeyJump = self:GetHP() > self:GetHP()
+		if self.OldKeyJump ~= KeyJump then
+			self.OldKeyJump = KeyJump
+			if KeyJump and self:GetEngineActive() and self:GetBoosting() == false and self:GetLockBoost() == false then
+				self:SetBoosting(true)
+				self.BoostEnd = false
+				self.BoostStart = true
+			elseif self:GetLockBoost() == true then
+				self:SetBoosting(false)
+				self.BoostStart = false
+				self.BoostEnd = true
+			else 
+				self.BoostEnd = true
+				self.BoostStart = false
+				self:SetBoosting(false)
+			end
+		end
+	end	
+	local forward = self:EyeAngles():Forward()
+	if self:GetBodygroup( 3 ) == 1 and self:GetBoosting() == true then
+
+		if self:GetBoost() < 1 then
+			self:SetLockBoost(true)
+			self:SetBoosting(false)
+		elseif self:GetBoost() > 0 then
+			if self.BoostStart == true then
+				self.BoostStart = false
+				self:EmitSound("GTAV_BOOST_START")
+			end
+			self:SetBoost(self:GetBoost() - 1)
+			self:GetPhysicsObject():AddVelocity(forward*10)
+		end
+	elseif self:GetLockBoost() == true then
+		self:SetBoost(self:GetBoost() + 0.5)
+		if self.BoostEnd == false then
+			self:StopSound("GTAV_BOOST_START") 
+			self.BoostEnd = true
+			self:EmitSound("GTAV_BOOST_END")
+		end
+		if self:GetBoost() >= 799.5 then
+			self:SetLockBoost(false)
+			self.BoostEnd = false
+		end
+	elseif self:GetBoost() <= 799.5 then
+		if self.BoostEnd == true then
+			self:StopSound("GTAV_BOOST_START") 
+			self.BoostEnd = false
+			self:EmitSound("GTAV_BOOST_END")
+		end
+			
+		self:SetBoost(self:GetBoost() + 0.5)
+	end
+	
+	local Speed = FrameTime()
+	if self.OpenClose == 0 then
+		self:SetBayOpen(0)
+	elseif self.OpenClose == 1 then
+		self:SetBayOpen(1)
+	end
 end
 
 
@@ -114,12 +225,7 @@ end
 function ENT:PrimaryAttack()
 
 	if not self:CanPrimaryAttack() then return end
-
-
-
 	self:SetNextPrimary( 0.05 )
-
-	
 
 	local fP = {
 
@@ -184,8 +290,13 @@ function ENT:RunOnSpawn()
 		local colorSelect = { Color(182, 182, 182, 255), Color(72, 72, 72, 255), Color(0, 127, 127, 255), Color(127, 111, 63, 255), Color(95, 127, 63, 255)}
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
+	self:AddPassengerSeat( Vector(0,0,0), Angle(0,-90,10) )
 	self:SetNWBool("NoMisslesLeft", false)
-
+	self:SetNWBool("CanBombAttack", false)
+	self.KeyPressed = 0
+	self.OpenClose = 1
+	self.OpenClose = 1
+	self:SetBoost(800)
 	self.MissileEnts = {}
 
 	for k,v in pairs( self.MISSILES ) do
@@ -230,7 +341,8 @@ function ENT:CreateAI()
 	if nak_color_planes_when_spawned:GetBool() == false then
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
-
+	
+	self:SetBodygroup( 2,1 )
 end
 
 function ENT:RemoveAI()
@@ -247,7 +359,7 @@ function ENT:HandleWeapons(Fire1, Fire2)
 		end
 		if self:GetAmmoSecondary() > 0 then
 			Fire2 = Driver:KeyDown( IN_ATTACK2 )
-		end
+		end		
 	end
 	if Fire1 then
 		self:PrimaryAttack()
@@ -297,28 +409,63 @@ end
 function ENT:OnEngineStarted()
 	self:EmitSound( "JET_START.ogg" )
 end
-
 function ENT:OnEngineStopped()
 	self:EmitSound( "JET_SHUTOFF.ogg" )
 end
 
 
 function ENT:HandleLandingGear()
-	--loool nub r you looking for why this plane doesnt have retractable landing gear? WEHLP BLAME ROCKSTAR BECAUSE IT IS NOT IN GTAV.
-	--idk i could have added it but less rigging work in blender = less boring more time to be in gmod and code :P
-	--This function has to be empty so the wheels dont change when space is pressed
+
 end
 
+function ENT:OpenHatch()
+	self:EmitSound( "lfs/bf109/gear.wav" )
+	if self:GetBayOpen() > 0.8 then
+		self.OpenClose = 0
+	elseif self:GetBayOpen() < 0.2 then
+		self.OpenClose = 1
+	end
+end
 
 function ENT:DropBombs()
-	print("boom")
+	print("start")
+	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
+	local BombsType = self:GetBombsType()
+
+	if self:CanBombsAttack() and self:GetBombsAmmo() > 0 then
+		if self:IsValid() then
+			self:SetNextBombs(10)
+			self:TakeBombsAmmo()
+			local ent = ents.Create( "gb_bomb_1000gp" )
+			local Pos = self:LocalToWorld( Vector(-40,0,38) )
+			ent:SetPos( Pos )
+			ent:SetAngles( self:GetAngles() )
+			ent:Spawn()
+			ent:Activate()
+			local speed = self:GetVelocity()
+			ent:GetPhysicsObject():SetMass(1000)
+			ent:GetPhysicsObject():AddVelocity(speed)
+			ent:SetPhysicsAttacker(self:GetDriver())
+			ent.Armed = true
+			timer.Simple(10, function() if self:IsValid() and self:GetBombsAmmo() > 0 then self:EmitSound( "common/wpn_hudon.ogg" ) end end)
+		end
+	end
 end
 
+function ENT:TakeBombsAmmo(ammo)
+	ammo = ammo or 1
+	self.SetBombsAmmo( math.max(self:GetBombsAmmo() - ammo,0) )
+end
 
+function ENT:SetNextBombs(pause)
+	self.NextBombs = CurTime() + pause
+	self:SetBombsTime(self.NextBombs)
+end
 
-
-
-
+function ENT:CanBombsAttack()
+	self.NextBombs = self.NextBombs or 0	
+	return self.NextBombs < CurTime()
+end
 
 function ENT:OnReloadWeapon()
 	self:SetAmmoPrimary( self:GetMaxAmmoPrimary() )

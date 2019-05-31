@@ -66,7 +66,7 @@ if SERVER then
 
 		if IsValid( pObj ) then
 
-			pObj:SetVelocityInstantaneous( self:GetForward() * (self:GetStartVelocity() + 3000) )
+			pObj:SetVelocityInstantaneous( self:GetForward() * (self:GetStartVelocity() + 8000) )
 
 		end
 
@@ -76,7 +76,7 @@ if SERVER then
 
 	function ENT:FollowTarget( followent )
 
-		local speed = self:GetStartVelocity() + (self:GetDirtyMissile() and 5000 or 3500)
+		local speed = self:GetStartVelocity() + (self:GetDirtyMissile() and 8000 or 4500)
 
 		local turnrate = (self:GetCleanMissile() or self:GetDirtyMissile()) and 60 or 50
 
@@ -100,7 +100,7 @@ if SERVER then
 
 		
 
-		local pos = TargetPos + followent:GetVelocity() * 0.25
+		local pos = TargetPos + followent:GetVelocity() * 0.28
 
 		
 
@@ -164,7 +164,7 @@ if SERVER then
 
 			pObj:EnableGravity( false ) 
 
-			pObj:SetMass( 1 ) 
+			pObj:SetMass( 100 ) 
 
 		end
 

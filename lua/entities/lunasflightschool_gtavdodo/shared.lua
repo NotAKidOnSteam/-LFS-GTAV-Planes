@@ -32,10 +32,10 @@ ENT.SeatAng = Angle(0,-90,12)
 
 ENT.WheelMass = 400
 ENT.WheelRadius = 7
-ENT.WheelPos_L = Vector(112.488,55.562,7.121)
-ENT.WheelPos_R = Vector(112.488,-55.562,7.121)
-ENT.WheelPos_C = Vector(-23.661,-55.562,7)
-ENT.WheelPos_E = Vector(-23.661,55.562,7)
+ENT.WheelPos_C = Vector(112.488,55.562,8)
+ENT.WheelPos_E = Vector(112.488,-55.562,8)
+ENT.WheelPos_L = Vector(-43.661,-55.562,7.2)
+ENT.WheelPos_R = Vector(-43.661,55.562,7.2)
 
 ENT.IdleRPM = 300
 ENT.MaxRPM = 1200
@@ -60,6 +60,7 @@ ENT.MaxHealth = 310
 
 ENT.MaxPrimaryAmmo = -1
 ENT.MaxSecondaryAmmo = -1
+
 
 sound.Add( {
 	name = "LFS_SPITFIRE_RPM1",

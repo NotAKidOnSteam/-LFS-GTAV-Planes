@@ -12,6 +12,7 @@ CreateConVar("lfs_nogibexplosioncustomforcevalue"					,  10  , NAK_CONVAR)
 CreateConVar("nak_ai_dont_use_missles"					,  "0"  , NAK_CONVAR)
 
 CreateClientConVar("nak_no_exhaust"					,  "0"  , NAK_CONVAR_CL) --adding so people that lag can disable it
+CreateClientConVar("nak_boost_effects"					,  "0"  , NAK_CONVAR_CL) --adding so people that lag can disable it
 
 NAK = istable( NAK ) and NAK or {} -- lets check if the NAK (plz luna u took it first :O) table exists. if not, create it!
 NAK.GTAVLFS = {}
@@ -62,22 +63,44 @@ NAK.GTAVLFS.CheckUpdates()
 
 --I can kinda figure it out but not really... figuring this out took me 4 hours. NOOO ITS 6:30 AM! I GTG FOR SCHOOLGIUSJNOJGNDFGNS
 
+
+
 if CLIENT then
 
 	local function PaintPlaneHudGTAVBombs( ent, X, Y )
 
 		if not IsValid( ent ) then return end
-		
 		if not ent.BombPlane == true then return end
 		
+		local vel = ent:GetVelocity():Length()
+		local speed = math.Round(vel * 0.09144,0)
+		nak_boost_effects = GetConVar( "nak_boost_effects" )
+		
+		if ent:GetBoosting() and nak_boost_effects:GetBool() == true then
+			DrawToyTown( speed/120, ScrH()/2 )
+			DrawBloom( 0.8 , 0.2, 9, 9, 1, 1, 2, 1.9, 0 )
+		end
+		
+		if ent:GetLockBoost() == false then
+			locked = 255
+		elseif ent:GetLockBoost() == true then
+			locked = 0
+		end
+	
 		if ent:GetMaxBombsAmmo() > -1 then
 
 			draw.SimpleText( "BOMB", "LFS_FONT", 10, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-
 			draw.SimpleText( ent:GetBombsAmmo(), "LFS_FONT", 120, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-
-		end
+			if ent:GetBodygroup( 3 ) == 1 then
+				draw.SimpleText( "Boost", "LFS_FONT", 10, 150, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				draw.SimpleText( ent:GetBoost(), "LFS_FONT", 120, 150, Color(255,locked,locked,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			end
+		end 
 	end
+	
+
+	
+
 	
 
 	hook.Add( "HUDPaint", "!!?1123GTAVPLANESLFSNUKES", function()
@@ -99,3 +122,4 @@ if CLIENT then
 	end)
 
 end
+simfphys.LFS:AddKey( "BOMB_DROP", "plane",  "Bomb Drop (GTAV Planes)", KEY_G, "cl_nak_lfs_bombdrop", 0 )
