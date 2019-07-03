@@ -137,3 +137,11 @@ sound.Add( {
 	level = 125,
 	sound = "^LAZER_DISTANT_LOOP.wav"
 } )
+
+sound.Add({
+	name = "lazeralarm",
+	channel = CHAN_STATIC,
+	volume = 0.6, 
+	level = 90,
+	sound = "^plane_warning.wav"
+})

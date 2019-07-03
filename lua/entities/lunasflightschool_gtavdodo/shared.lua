@@ -101,3 +101,12 @@ sound.Add( {
 	level = 125,
 	sound = "^lfs/spitfire/dist.wav"
 } )
+
+
+sound.Add({
+	name = "dodoalarm",
+	channel = CHAN_STATIC,
+	volume = 0.6, 
+	level = 90,
+	sound = "^plane_warning.wav"
+})

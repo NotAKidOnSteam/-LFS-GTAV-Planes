@@ -18,7 +18,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 end
 
 function ENT:OnTick(ent)
-
+	--i would make this with a for loop instead of spawning all 8 manually but when I first coded this I didnt use the local pos for the plane but instead used getpos() and getforward,getright,and getup.. yeet
 	if self.SpawnedFloats == false then
 		self.SpawnedFloats = true
 
@@ -154,16 +154,14 @@ function ENT:OnTick(ent)
 		self.floaty8:DrawShadow( false )
 	end
 
-	self:CallOnRemove( "removebarrelssonolagbuildupfromvodo", function( ent )
-		if self.floaty8:IsValid() then self.floaty8:Remove() end 
-		if self.floaty7:IsValid() then self.floaty7:Remove() end 
-		if self.floaty6:IsValid() then self.floaty6:Remove() end 
-		if self.floaty5:IsValid() then self.floaty5:Remove() end 
-		if self.floaty4:IsValid() then self.floaty4:Remove() end 
-		if self.floaty3:IsValid() then self.floaty3:Remove() end 
-		if self.floaty2:IsValid() then self.floaty2:Remove() end 
-		if self.floaty:IsValid() then self.floaty:Remove() end 
-	end )
+	self:DeleteOnRemove( self.floaty8 )
+	self:DeleteOnRemove( self.floaty7 )
+	self:DeleteOnRemove( self.floaty6 )
+	self:DeleteOnRemove( self.floaty5 )
+	self:DeleteOnRemove( self.floaty4 )
+	self:DeleteOnRemove( self.floaty3 )
+	self:DeleteOnRemove( self.floaty2 )
+	self:DeleteOnRemove( self.floaty )
 	local vel = self:GetVelocity():Length()
 	local speed = math.Round(vel * 0.09144,0)
 	
@@ -242,7 +240,9 @@ function ENT:RunOnSpawn()
 	self:AddPassengerSeat( Vector(-36,39,49), Angle(0,-0,4) )
 	self:AddPassengerSeat( Vector(-36,-39,49), Angle(0,-180,4) )
 	self.SpawnedFloats = false
-
+	self:SetNWBool("carkeysSupported", true)
+	self:SetNWBool("carkeysCustomAlarm", true)
+	self:SetNWString("carkeysCAlarmSound", "dodoalarm")
 end
 
 function ENT:PrimaryAttack()

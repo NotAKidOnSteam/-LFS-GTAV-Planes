@@ -31,6 +31,9 @@ function ENT:RunOnSpawn()
 	self:AddPassengerSeat( Vector(38,-11,61), Angle(0,-90,10) )
 	self:AddPassengerSeat( Vector(-33,11,61), Angle(0,-90,10) )
 	self:AddPassengerSeat( Vector(-33,-11,61), Angle(0,-90,10) )
+	self:SetNWBool("carkeysSupported", true)
+	self:SetNWBool("carkeysCustomAlarm", true)
+	self:SetNWString("carkeysCAlarmSound", "velumalarm")
 end
 
 function ENT:PrimaryAttack()

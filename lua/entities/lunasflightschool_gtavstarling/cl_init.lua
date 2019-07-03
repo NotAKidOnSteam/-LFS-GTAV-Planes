@@ -250,12 +250,20 @@ end
 
 function ENT:AnimCabin()
 	local bOn = self:GetActive()
+	local locked = self:GetNWBool("carKeysVehicleLocked")
 	
 	local TVal = bOn and 0 or 1
-	
+	local lock = locked and 0 or 1
 	local Speed = FrameTime() * 4
-	
-	self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
+	if bOn and not locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
+	elseif bOn and locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
+	elseif not bOn and locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(lock - self.SMcOpen,-Speed,Speed) or 0
+	elseif not bOn and not locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(lock - self.SMcOpen,-Speed,Speed) or 0
+	end
 	
 	--self:ManipulateBonePosition( 11, Vector( 0,-self.SMcOpen * 18,self.SMcOpen * 1.5) ) 
 	self:ManipulateBoneAngles( 7, Angle( 0,0,self.SMcOpen * 103 ) )
@@ -309,4 +317,34 @@ function ENT:AnimBombsDoor()
 	self.SMRG = self.SMRG and self.SMRG + (50 *  (1 - self:GetBayOpen()) - self.SMRG) * FrameTime() * 2 or 0
 	self:ManipulateBoneAngles( 4, Angle( self.SMRG ) )
 	self:ManipulateBoneAngles( 3, Angle( -self.SMRG ) )
+end
+
+function ENT:LFSHudPaint( X, Y, data, ply ) -- driver only
+		if not IsValid( self ) then return end
+
+		local vel = self:GetVelocity():Length()
+		local speed = math.Round(vel * 0.09144,0)
+		nak_boost_effects = GetConVar( "nak_boost_effects" )
+		
+		if self:GetBoosting() and nak_boost_effects:GetBool() == true then
+			DrawToyTown( speed/120, ScrH()/2 )
+			DrawBloom( 0.8 , 0.2, 9, 9, 1, 1, 2, 1.9, 0 )
+		end
+		
+		if self:GetLockBoost() == false then
+			locked = 255
+		elseif self:GetLockBoost() == true then
+			locked = 0
+		end
+	
+		if self:GetMaxBombsAmmo() > -1 then
+
+			draw.SimpleText( "BOMB", "LFS_FONT", 10, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			draw.SimpleText( self:GetBombsAmmo(), "LFS_FONT", 120, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			if self:GetBodygroup( 3 ) == 1 then
+				draw.SimpleText( "BOOST", "LFS_FONT", 10, 160, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+				draw.SimpleText( self:GetBoost(), "LFS_FONT", 120, 160, Color(255,locked,locked,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
+			end
+		end 
+
 end

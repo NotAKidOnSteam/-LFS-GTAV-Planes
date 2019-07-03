@@ -20,7 +20,7 @@ end
 
 function ENT:SecondaryAttack()
 	nak_ai_dont_use_missles = GetConVar( "nak_ai_dont_use_missles" )
-	if self:GetAI() and nak_ai_dont_use_missles:GetBool() == false then return end
+	if self:GetAI() and nak_ai_dont_use_missles:GetInt() == 1 then return end
 	
 	if not self:CanSecondaryAttack() then return end
 
@@ -120,13 +120,13 @@ function ENT:OnTick()
 	
 	nak_ai_infinite_missles = GetConVar( "nak_ai_infinite_missles" )
 	nak_infinite_missles = GetConVar( "nak_infinite_missles" )
-	if nak_infinite_missles:GetBool() == true or nak_ai_infinite_missles:GetBool() == true then
+	if not self:GetAI() and nak_infinite_missles:GetInt() == 1 or self:GetAI() and nak_ai_infinite_missles:GetInt() == 1 then
 	
 		if self:GetAmmoSecondary() == 0 and self:GetNWBool("NoMisslesLeft") == true then
 		
 			self:SetNWBool("NoMisslesLeft", false)
 			timer.Simple(5, function()
-				if self:IsValid() and self.twice == true and self:GetAmmoSecondary() <1 then
+				if self:IsValid() then
 				
 					self:SetAmmoSecondary(6)
 					self:EmitSound( "lfs/bf109/gear.wav" )
@@ -136,7 +136,7 @@ function ENT:OnTick()
 			self:SetNWBool("NoMisslesLeft", true)
 		end
 	end
-	
+	-- boost
 	local Driver = self:GetDriver()
 	if IsValid( Driver ) and self:GetBodygroup( 3 ) == 1 and not self:GetAI() then
 		local KeyJump = Driver:lfsGetInput( "VSPEC" )
@@ -157,8 +157,7 @@ function ENT:OnTick()
 			end
 		end
 	elseif self:GetAI() and self:GetBodygroup(3) == 1 then
-	
-		local KeyJump = self:GetHP() > self:GetHP()
+		local KeyJump = self.AIDamaged
 		if self.OldKeyJump ~= KeyJump then
 			self.OldKeyJump = KeyJump
 			if KeyJump and self:GetEngineActive() and self:GetBoosting() == false and self:GetLockBoost() == false then
@@ -210,8 +209,7 @@ function ENT:OnTick()
 			
 		self:SetBoost(self:GetBoost() + 0.5)
 	end
-	
-	local Speed = FrameTime()
+	-- bomb door
 	if self.OpenClose == 0 then
 		self:SetBayOpen(0)
 	elseif self.OpenClose == 1 then
@@ -220,10 +218,12 @@ function ENT:OnTick()
 end
 
 
-
-
 function ENT:PrimaryAttack()
-
+	if self:GetAI() then
+		self:OpenHatch()	
+		self:DropBombs()
+		self:OpenHatch()	
+	end
 	if not self:CanPrimaryAttack() then return end
 	self:SetNextPrimary( 0.05 )
 
@@ -234,6 +234,7 @@ function ENT:PrimaryAttack()
 		Vector(29,54,96),
 
 	}
+
 
 
 
@@ -257,11 +258,11 @@ function ENT:PrimaryAttack()
 
 	bullet.TracerName	= "lfs_tracer_green"
 
-	bullet.Force	= 100
+	bullet.Force	= 90
 
-	bullet.HullSize 	= 10
+	bullet.HullSize 	= 8
 
-	bullet.Damage	= 32
+	bullet.Damage	= 12
 
 	bullet.Attacker 	= self:GetDriver()
 
@@ -290,12 +291,11 @@ function ENT:RunOnSpawn()
 		local colorSelect = { Color(182, 182, 182, 255), Color(72, 72, 72, 255), Color(0, 127, 127, 255), Color(127, 111, 63, 255), Color(95, 127, 63, 255)}
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
-	self:AddPassengerSeat( Vector(0,0,0), Angle(0,-90,10) )
 	self:SetNWBool("NoMisslesLeft", false)
 	self:SetNWBool("CanBombAttack", false)
 	self.KeyPressed = 0
 	self.OpenClose = 1
-	self.OpenClose = 1
+	self.AIDamagedExtend = 0
 	self:SetBoost(800)
 	self.MissileEnts = {}
 
@@ -330,6 +330,10 @@ function ENT:RunOnSpawn()
 		end
 	end
 	self.twice = false
+	
+	self:SetNWBool("carkeysSupported", true)
+	self:SetNWBool("carkeysCustomAlarm", true)
+	self:SetNWString("carkeysCAlarmSound", "starlingalarm")
 end
 
 
@@ -343,10 +347,15 @@ function ENT:CreateAI()
 	end	
 	
 	self:SetBodygroup( 2,1 )
+	self:SetBodygroup( 3,1 )
 end
 
 function ENT:RemoveAI()
 end
+
+
+
+
 
 
 function ENT:HandleWeapons(Fire1, Fire2)
@@ -428,15 +437,14 @@ function ENT:OpenHatch()
 end
 
 function ENT:DropBombs()
-	print("start")
-	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
-	local BombsType = self:GetBombsType()
-
-	if self:CanBombsAttack() and self:GetBombsAmmo() > 0 then
+	local reloadtime = self:GetBombSelectionTime()
+	local bombselection = self:GetBombSelection()
+	
+	if self:CanBombsAttack() and self:GetBombsAmmo() > 0 and self:GetBombsType() < 4 then
 		if self:IsValid() then
-			self:SetNextBombs(10)
+			self:SetNextBombs( reloadtime )
 			self:TakeBombsAmmo()
-			local ent = ents.Create( "gb_bomb_1000gp" )
+			local ent = ents.Create( bombselection )
 			local Pos = self:LocalToWorld( Vector(-40,0,38) )
 			ent:SetPos( Pos )
 			ent:SetAngles( self:GetAngles() )
@@ -447,7 +455,7 @@ function ENT:DropBombs()
 			ent:GetPhysicsObject():AddVelocity(speed)
 			ent:SetPhysicsAttacker(self:GetDriver())
 			ent.Armed = true
-			timer.Simple(10, function() if self:IsValid() and self:GetBombsAmmo() > 0 then self:EmitSound( "common/wpn_hudon.ogg" ) end end)
+			timer.Simple( reloadtime, function() if self:IsValid() and self:GetBombsAmmo() > 0 then self:EmitSound( "common/wpn_hudon.ogg" ) end end)
 		end
 	end
 end

@@ -20,7 +20,7 @@ end
 
 function ENT:SecondaryAttack()
 	nak_ai_dont_use_missles = GetConVar( "nak_ai_dont_use_missles" )
-	if self:GetAI() and nak_ai_dont_use_missles:GetBool() == false then return end
+	if self:GetAI() and nak_ai_dont_use_missles:GetInt() == 1 then return end
 	
 	if not self:CanSecondaryAttack() then return end
 
@@ -83,7 +83,7 @@ function ENT:OnTick()
 	self:SetBodygroup( 8, 1 )
 	nak_ai_infinite_missles = GetConVar( "nak_ai_infinite_missles" )
 	nak_infinite_missles = GetConVar( "nak_infinite_missles" )
-	if nak_infinite_missles:GetBool() == true or nak_ai_infinite_missles:GetBool() == true then
+	if not self:GetAI() and nak_infinite_missles:GetInt() == 1 or self:GetAI() and nak_ai_infinite_missles:GetInt() == 1 then
 	
 		if self:GetAmmoSecondary() == 0 and self:GetNWBool("NoMisslesLeft") == true then
 		
@@ -144,11 +144,11 @@ function ENT:PrimaryAttack()
 
 	bullet.TracerName	= "lfs_tracer_green"
 
-	bullet.Force	= 100
+	bullet.Force	= 95
 
-	bullet.HullSize 	= 10
+	bullet.HullSize 	= 9
 
-	bullet.Damage	= 32
+	bullet.Damage	= 15
 
 	bullet.Attacker 	= self:GetDriver()
 
@@ -211,6 +211,9 @@ function ENT:RunOnSpawn()
 			table.insert( self.MissileEnts, Missile )
 		end
 	end
+	self:SetNWBool("carkeysSupported", true)
+	self:SetNWBool("carkeysCustomAlarm", true)
+	self:SetNWString("carkeysCAlarmSound", "lazeralarm")
 end
 
 

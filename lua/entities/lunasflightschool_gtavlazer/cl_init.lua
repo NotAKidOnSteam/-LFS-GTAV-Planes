@@ -258,14 +258,21 @@ end
 
 function ENT:AnimCabin()
 	local bOn = self:GetActive()
+	local locked = self:GetNWBool("carKeysVehicleLocked")
 	
 	local TVal = bOn and 0 or 1
-	
+	local lock = locked and 0 or 1
 	local Speed = FrameTime() * 4
+	if bOn and not locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
+	elseif bOn and locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
+	elseif not bOn and locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(lock - self.SMcOpen,-Speed,Speed) or 0
+	elseif not bOn and not locked then
+		self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(lock - self.SMcOpen,-Speed,Speed) or 0
+	end
 	
-	self.SMcOpen = self.SMcOpen and self.SMcOpen + math.Clamp(TVal - self.SMcOpen,-Speed,Speed) or 0
-	
-	--self:ManipulateBonePosition( 11, Vector( 0,-self.SMcOpen * 18,self.SMcOpen * 1.5) ) 
 	self:ManipulateBoneAngles( 15, Angle( 0,0,self.SMcOpen * 45 ) )
 end
 

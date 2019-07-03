@@ -2,17 +2,18 @@ local NAK_CONVAR = { FCVAR_ARCHIVE, FCVAR_SERVER_CAN_EXECUTE }
 local NAK_CONVAR_CL = { FCVAR_ARCHIVE }
 
 
-CreateConVar("nak_overpowered_bombs"					,  "0"  , NAK_CONVAR)
-CreateConVar("nak_color_planes_when_spawned"					,  "0"  , NAK_CONVAR)
-CreateConVar("nak_ai_infinite_missles"					,  "0"  , NAK_CONVAR)
-CreateConVar("nak_infinite_missles"					,  "0"  , NAK_CONVAR)
-CreateConVar("lfs_giblifetime"					,  5  , NAK_CONVAR)
-CreateConVar("lfs_nogibexplosion"					,  0  , NAK_CONVAR)
-CreateConVar("lfs_nogibexplosioncustomforcevalue"					,  10  , NAK_CONVAR)
-CreateConVar("nak_ai_dont_use_missles"					,  "0"  , NAK_CONVAR)
+CreateConVar("nak_overpowered_bombs", "0", NAK_CONVAR)
+CreateConVar("nak_color_planes_when_spawned", "0", NAK_CONVAR)
+CreateConVar("nak_ai_infinite_missles", 0, NAK_CONVAR)
+CreateConVar("nak_infinite_missles", 0, NAK_CONVAR)
+CreateConVar("lfs_giblifetime", 5, NAK_CONVAR)
+CreateConVar("lfs_nogibexplosion", "0", NAK_CONVAR)
+CreateConVar("lfs_nogibexplosioncustomforcevalue", 10, NAK_CONVAR)
+CreateConVar("nak_ai_dont_use_missles", "0", NAK_CONVAR)
 
-CreateClientConVar("nak_no_exhaust"					,  "0"  , NAK_CONVAR_CL) --adding so people that lag can disable it
-CreateClientConVar("nak_boost_effects"					,  "0"  , NAK_CONVAR_CL) --adding so people that lag can disable it
+CreateClientConVar("nak_no_exhaust", "0", true, true, "Removes LFS GTAV jet planes exhaust from being spawned on the client!") --adding so people that lag can disable it
+CreateClientConVar("nak_avenger_noscreen", "0", true, true, "Disables the LFS GTAV Avengers screen!" ) --adding so people that lag can disable it
+CreateClientConVar("nak_boost_effects", "0"  , true, true, "Removes the postprossessing effects when boosting!") --adding so people that lag can disable it
 
 NAK = istable( NAK ) and NAK or {} -- lets check if the NAK (plz luna u took it first :O) table exists. if not, create it!
 NAK.GTAVLFS = {}
@@ -22,6 +23,8 @@ NAK.GTAVLFS.VERSION = 10 --woot
 if SERVER then 
 	resource.AddWorkshop("1579161327") -- hoping this fixes problems :P 
 end
+
+
 
 
 --STOP FUGING TOUCHING GITHUB YOU KEEP ADDING COMMITS WITH YOUR STUPID LITTLE FINGERS AND MAKING YOURSELF HAVE TO UPLOAD AGAIN SO THEY ARE SYNCED UGSJIGNSIGNSIJNGKSJ
@@ -59,51 +62,24 @@ end
 
 NAK.GTAVLFS.CheckUpdates()
 
--- if u need the bomb hud code idc. if you can read the code and figure it out then take it :P (i cant even read it lol)
 
---I can kinda figure it out but not really... figuring this out took me 4 hours. NOOO ITS 6:30 AM! I GTG FOR SCHOOLGIUSJNOJGNDFGNS
-
-
-
+-- this code is to make the blur effect in 
 if CLIENT then
 
 	local function PaintPlaneHudGTAVBombs( ent, X, Y )
-
 		if not IsValid( ent ) then return end
-		if not ent.BombPlane == true then return end
-		
+		if not ent.GTAVBoost == true then return end
 		local vel = ent:GetVelocity():Length()
 		local speed = math.Round(vel * 0.09144,0)
+
 		nak_boost_effects = GetConVar( "nak_boost_effects" )
-		
 		if ent:GetBoosting() and nak_boost_effects:GetBool() == true then
 			DrawToyTown( speed/120, ScrH()/2 )
 			DrawBloom( 0.8 , 0.2, 9, 9, 1, 1, 2, 1.9, 0 )
 		end
-		
-		if ent:GetLockBoost() == false then
-			locked = 255
-		elseif ent:GetLockBoost() == true then
-			locked = 0
-		end
-	
-		if ent:GetMaxBombsAmmo() > -1 then
-
-			draw.SimpleText( "BOMB", "LFS_FONT", 10, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			draw.SimpleText( ent:GetBombsAmmo(), "LFS_FONT", 120, 135, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			if ent:GetBodygroup( 3 ) == 1 then
-				draw.SimpleText( "Boost", "LFS_FONT", 10, 150, Color(255,255,255,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-				draw.SimpleText( ent:GetBoost(), "LFS_FONT", 120, 150, Color(255,locked,locked,255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP )
-			end
-		end 
 	end
-	
 
-	
-
-	
-
-	hook.Add( "HUDPaint", "!!?1123GTAVPLANESLFSNUKES", function()
+	hook.Add( "HUDPaint", "GTAVBoostEffectsNAK", function()
 
 		local ply = LocalPlayer()
 
@@ -123,3 +99,43 @@ if CLIENT then
 
 end
 simfphys.LFS:AddKey( "BOMB_DROP", "plane",  "Bomb Drop (GTAV Planes)", KEY_G, "cl_nak_lfs_bombdrop", 0 )
+simfphys.LFS:AddKey( "BAY_DOOR", "plane",  "Bay Door (GTAV Planes)", KEY_F, "cl_nak_lfs_baydoor", 0 )
+
+--any plane with boost that has AI will boost if damaged for 8 seconds
+hook.Add( "EntityTakeDamage", "AIBoostIfAttacked", function( target, dmginfo )
+	if not target.GTAVBoost == true then return end
+	if not target:GetAI() then return end
+	target.AIHit = true
+	
+	if target.AIHit then
+		timer.Adjust( "BoostPlaneDamagedWithAI", 2 + target.AIDamagedExtend, 1, function()
+			if target:IsValid() then
+				target.AIDamaged = false 
+				target.AIDamagedExtend = 0
+			end
+		end) 
+	end
+
+	target.AIDamagedExtend = target.AIDamagedExtend + 1
+	if target.AIDamagedExtend == 1 then
+		target.AIDamaged = true
+		AIDamagedScaredBoost(target)
+	end
+	target.AIHit = false
+end )
+
+function AIDamagedScaredBoost(target)
+	timer.Create( "BoostPlaneDamagedWithAI", 2, 1, function()
+		if target:IsValid() then
+			target.AIDamaged = false 
+			target.AIDamagedExtend = 0
+		end
+	end) 
+end
+
+hook.Add("EntityRemoved", "AIBoostIfAttackedAndThenRemoved", function(ent) 
+	if not ent.GTAVBoost == true then return end
+	
+	ent:StopSound("GTAV_BOOST_START") 
+	ent:StopSound("GTAV_BOOST_END") 
+end)

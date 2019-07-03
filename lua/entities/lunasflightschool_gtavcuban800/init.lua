@@ -10,7 +10,7 @@ function ENT:SpawnFunction( ply, tr, ClassName )
 	if not tr.Hit then return end
 
 	local ent = ents.Create( ClassName )
-	ent:SetPos( tr.HitPos + tr.HitNormal * 120 + Vector(0,0,-120))
+	ent:SetPos( tr.HitPos + tr.HitNormal)
 	ent:Spawn()
 	ent:Activate()
 
@@ -27,11 +27,9 @@ function ENT:RunOnSpawn()
 		self:SetColor( colorSelect[ math.random( #colorSelect ) ] ) 
 	end	
 	self:AddPassengerSeat( Vector(45,-11,61), Angle(0,-90,10) )
-	timer.Simple(1, function() if self:IsValid() then
-	if self:GetAI() then
-		self:SetAmmoSecondary(math.random( 0,4,1 ))
-	end
-	end end)
+	self:SetNWBool("carkeysSupported", true)
+	self:SetNWBool("carkeysCustomAlarm", true)
+	self:SetNWString("carkeysCAlarmSound", "cuban800alarm")
 end
 
 

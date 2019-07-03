@@ -63,7 +63,7 @@ ENT.MaxHealth = 400
 ENT.MaxPrimaryAmmo = 1200
 ENT.MaxSecondaryAmmo = 6
 ENT.MaxBombsAmmo = 8
-
+ENT.BombPlane = true
 
 ENT.MISSILEMDL = "models/notakid/gtav/planes/ls-22_starling/starling_missle.mdl"
 
@@ -220,11 +220,10 @@ end
 
 
 function ENT:AddDataTables()
-	--add this bit just because i said so idk if it actually makes it work but dont test it or else it might error and make you restart the game to clear the error completly even after undoing
 end
 
 
-ENT.BombPlane = true -- this bit is looked for in line 70 of nak_gtav_planes.lua. what makes my custom hud paint not show on normal lfs planes other than ones with true!
+ENT.GTAVBoost = true -- global thing that will add boost to drivers screen if GetBoosting() == true (that is a network var meaning it can be put into ANY entity, so simfphys + LFS can use this code)
 
 
 --the networkvar doesnt make MaxBombsAmmo into GetMaxBombsAmmo as it is not in there. I mean, u could but it would be stupid :P
@@ -232,6 +231,68 @@ ENT.BombPlane = true -- this bit is looked for in line 70 of nak_gtav_planes.lua
 function ENT:GetMaxBombsAmmo()
 	return self.MaxBombsAmmo
 end
+
+function ENT:GetBombSelection()
+	local BombsType = self:GetBombsType()
+	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
+	
+	if nak_overpowered:GetInt() == 1 then -- Overpowered Bombs List
+		if BombsType == 0 then
+			return "gb_bomb_1000gp"
+		elseif BombsType == 1 then
+			return "gb_bomb_mk77"
+		elseif BombsType == 2 then
+			return "gb_bomb_500gp"
+		elseif BombsType == 3 then
+			return "gb_bomb_cbu"
+		end
+	else
+		if BombsType == 0 then -- Normal Bomb List
+			return "gb_bomb_250gp"
+		elseif BombsType == 1 then
+			return "gb_bomb_fab250"
+		elseif BombsType == 2 then
+			return "gb_bomb_sc500"
+		elseif BombsType == 3 then
+			return "gb_bomb_cbu"
+		end
+	end
+end
+
+function ENT:GetBombSelectionTime()
+	local BombsType = self:GetBombsType()
+	nak_overpowered = GetConVar( "nak_overpowered_bombs" )
+	
+	if nak_overpowered:GetInt() == 1 then -- Overpowered Bombs List Reload Time
+		if BombsType == 0 then
+			return 15
+		elseif BombsType == 1 then
+			return 15
+		elseif BombsType == 2 then
+			return 8
+		elseif BombsType == 3 then
+			return 8
+		end
+	else
+		if BombsType == 0 then -- Normal Bomb List Reload Time
+			return 2.5
+		elseif BombsType == 1 then
+			return 2.5
+		elseif BombsType == 2 then
+			return 4
+		elseif BombsType == 3 then
+			return 8
+		end
+	end
+end
+
+sound.Add({
+	name = "starlingalarm",
+	channel = CHAN_STATIC,
+	volume = 0.6, 
+	level = 90,
+	sound = "^plane_warning.wav"
+})
 
 -- I am commenting all this for the day I forget how to do this, and if someone else wants to look through my code :)
 -- sorry I cant code well :P
